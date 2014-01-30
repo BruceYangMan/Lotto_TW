@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Bootstrap -->
     <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="stylesheets/style.css" rel="stylesheet">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -14,40 +15,160 @@
     <![endif]-->
   </head>
   <body>
+        <div class="container">
+            <h1 style="float:left">新春100組大樂透線上對獎</h1>
+            <div class="page-header">
+                <div style="float:left; margin-left:20px;">
+                  <div style="clear:both"></div>
+                    <div class="row-fluid show-grid">
+                      <span class="pull-left" style="display:inline-block; margin-right:5px;">
+                        <span class="label label-warning">資料來源</span><a href="http://www.taiwanlottery.com.tw/">台灣彩券官網</a>
+                        </span>
+                          <span class="pull-left" style="display:inline-block; margin-right:5px;">
+                            <span class="label label-warning">僅供參考</span>
+                           查詢結果僅供參考，以台灣彩卷公告為主 
+                          </span>
+                          <span class="pull-left" style="display:inline-block; margin-right:5px;">
+                          <span class="label label-warning">程式製作</span><a href="http://tomshare.idv.tw/">熊哥分享區</a>
+                          </span>
+                      </sapn>
+                    </div>
+                </div>
+            </div> 
 
-    <div><br></div>
-  <form class="form-horizontal" role="form">
-      <div class="form-group">
-        <label for="inputEmail3" class="col-sm-2 control-label">Email</label>
-        <div class="col-sm-10">
-          <input type="email" class="form-control" id="inputEmail3" placeholder="Email">
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="inputPassword3" class="col-sm-2 control-label">Password</label>
-        <div class="col-sm-10">
-          <input type="password" class="form-control" id="inputPassword3" placeholder="Password">
-        </div>
-      </div>
-      <div class="form-group">
-        <div class="col-sm-offset-2 col-sm-10">
-          <div class="checkbox">
-            <label>
-              <input type="checkbox"> Remember me
-            </label>
+          <div class="row-fluid show-grid">
+            <div class="span4">
+               <!--[if lte IE 8]>
+                    <h3>不支援的瀏覽器</h3>
+                    <div class="alert alert-error">
+                        目前不支援IE8以下瀏覽器，請使用IE9以上、Chrome、Firefox或Safari瀏覽器，達到最佳的瀏覽效果。
+                    </div>
+                <![endif]-->
+                <h3>公告</h3>
+                <div class="alert alert-info">
+                   1.目前獎號僅包含各期加開的100組獎號，之後會陸續增加獎號資料，敬請期待。<br />
+                   2.資料來源為台灣彩券，公告獎號以台灣彩券為主，本次查詢結果僅供參考。<br />
+                </div>
+                <h3>使用說明</h3>
+                <div class="alert alert-info">
+                    1.以","或"-"或"非數字文字"區別號碼<br />2.多筆以換行區隔<br />3.可直接貼上
+                </div>
+                <h3>輸入範例</h3>
+                <div class="alert alert-info">
+                    1,2,3,4,5,6<br />
+                    7 8 9 10 11 12<br />
+                    [13][14][15][16][17][18]<br />
+                    <br />
+                    19*20+21_22/23,24
+                </div>
+                <div class="span4">
+                  <h3>選取期別</h3>
+                  <select data-bind = "options: lotteries, 
+                    optionsValue: 'index', 
+                    optionsText: 'title', 
+                    value: chosenLotteryValue,
+                    valueUpdate: chosenLotteryValueUpdate,
+                    click: chosenLotteryValueUpdate" class="input-block-level">
+                  </select>
+                  <h3>請輸入</h3>
+                  <div class="row-fluid show-grid">
+                    <textarea id="input" data-bind="event:{ keyup: inputKeyUp }" class="input-block-level" placeholder="請將號碼輸入在這" style="height:180px"></textarea>
+                  </div>
+                  <button type="button" data-bind="click: getResult" class="btn btn-primary btn-large pull-right">查詢</button>
+                </div>
+                <div class="span4">
+                  <h3>結果</h3>
+                  <!-- 注意 -->
+                  <p>
+                     <span class="label label-warning">注意</span>
+                     100組大樂透只有
+                     <code>六碼全中</code>
+                      才算
+                  </p>
+                  <div data-bind="foreach: result, visible: result" style="display:none">
+                    <!--顯示使用者輸入的獎號 -->
+                    <div data-bind="visible: isPassed" class="well">
+                      <strong data-bind="text: '第' + $root.padLeft($index() + 1, 1) + '組'">#1</strong>
+                      <span data-bind="foreach: input">
+                        <span data-bind="css: $root.getNumCss($data, $index()), text: $root.padLeft($data, 2)"></span>
+                      </span>
+                    </div>
+                    <!--顯示警告和錯誤 -->
+                     <div data-bind="visible: !isPassed"  class="alert alert-error">
+                            <strong data-bind="text: '第' + $root.padLeft($index() + 1, 1) + '組'">#2</strong>
+                            <strong>錯誤</strong>
+                            <div data-bind="html: reason">號碼77超出範圍。</div>
+                    </div>
+                    <div data-bind="visible: isPassed && isWarn"  class="alert alert-block">
+                      <strong data-bind="text: '第' + $root.padLeft($index() + 1, 1) + '組'">#2</strong>
+                      <strong>警告</strong>
+                      <div data-bind="html: reason">有重複的輸入。</div>
+                    </div>
+                    <!-- 顯示分組對獎結果 -->
+                     <div data-bind="foreach: matches">
+                       <!-- 目前分組 -->
+                        <span data-bind="visible: $root.compareTimes(times, 6) && lotteryMatch().length > 0" class="label label-important">全中</span>
+                        <span data-bind="visible: $root.compareTimes(times, 6) && lotteryMatch().length > 0" class="label label-warning">恭喜您中100萬</span>
+                        <span data-bind="visible: $root.compareTimes(times, 5) && lotteryMatch().length > 0" class="label label-info">中五個號碼</span>
+                        <span data-bind="visible: $root.compareTimes(times, 4) && lotteryMatch().length > 0" class="label label-info">中四個號碼</span>
+                        <span data-bind="visible: $root.compareTimes(times, 3) && lotteryMatch().length > 0" class="label label-info">中三個號碼</span>
+                        <span data-bind="visible: $root.compareTimes(times, 2) && lotteryMatch().length > 0" class="label label-info">中兩個號碼</span>
+                         <!-- 對中獎獎號列表 -->
+                          <div data-bind="foreach: lotteryMatch">
+                            <span data-bind="text: '第' + $root.padLeft(index, 3) + '組'" class="label">第001組</span>
+                            <span data-bind="foreach: lottery" style="display:inline-block">
+                               <span data-bind="text: $root.padLeft($data, 2), css: $root.getLotteryCss($parents[2].input, $data)">01</span>
+                            </span>
+                            <br />
+                          </div>
+                      </div>
+                      <span data-bind="visible: !isHaveMatch " class="label label-info">沒中</span>
+                  </div>
+                </div>
+            </div>
           </div>
+
+
+          <!--  <div class="from">
+              <form class="form-horizontal" role="form">
+                  <div class="form-group">
+                    <label for="lable-input" class="col-sm-2 control-label">樂透號碼：</label>
+                    <div class="col-sm-3">
+                      <input type="text" class="form-control" id="input" placeholder="Example:03 14 20 25 33 47 ">
+                    </div>
+                  </div>
+                 
+               
+                  <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                      <button type="submit" class="btn btn-default">兌獎去！</button>
+                    </div>
+                  </div>
+              </form>
+            </div> -->
         </div>
-      </div>
-      <div class="form-group">
-        <div class="col-sm-offset-2 col-sm-10">
-          <button type="submit" class="btn btn-default">Sign in</button>
-        </div>
-      </div>
-</form>
+
+         <div style="display:none">
+        <!-- 函式庫 -->
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+        <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/knockout/knockout-2.2.1.js"></script>
+        script type="text/javascript" src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="https://apis.google.com/js/plusone.js?ver=3.5.1" gapi_processed="true"></script>
+        <!-- 資料來源 -->
+        <script src="http://tomshare.idv.tw/web-app/lottery-data.js?update=20130213"></script>
+        <!-- 主程式 -->
+        <script src="http://tomshare.idv.tw/web-app/lottery-program.js?update=20130213"></script>
+        <script>
+            //套用
+            ko.applyBindings(new LotteryModel($("textarea#input"), lotteries));
+        </script>
+        <!-- 網站設定 -->
+        <script src="http://tomshare.idv.tw/web-app/setting.js?update=20130214"></script>
+    </div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://code.jquery.com/jquery.js"></script>
+    <!--<script src="https://code.jquery.com/jquery.js"></script>-->
     <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!--<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>-->
   </body>
 </html>
